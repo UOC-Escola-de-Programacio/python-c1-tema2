@@ -1,16 +1,27 @@
 """
 Enunciado:
-Desarrolla una aplicación web básica con Flask que responda a una petición GET y devuelva una pequeña página web.
-La aplicación debe tener el siguiente endpoint:
+Desarrolla una aplicación web con Flask que demuestre diferentes formas de pasar parámetros a una API.
+La aplicación debe implementar los siguientes endpoints:
 
-1. `GET /website`: Devuelve una página web con una estructura HTML mínima que incluya un mensaje "¡Hola mundo!".
+1. `GET /search`: Acepta parámetros de consulta (query parameters) en la URL.
+   Ejemplo: `/search?q=flask&category=tutorial`
+   Debe devolver los parámetros recibidos en formato JSON.
 
-Tu tarea es completar la implementación de la función create_app() y del endpoint solicitado.
+2. `POST /form`: Acepta datos de formulario (form data) en el cuerpo de la petición.
+   Debe devolver los datos recibidos en formato JSON.
 
-Nota: Asegúrate de incluir una estructura HTML válida en la respuesta.
+3. `POST /json`: Acepta datos JSON en el cuerpo de la petición.
+   Debe devolver los datos recibidos en formato JSON.
+
+Esta actividad te enseñará las diferentes formas de recibir parámetros en una aplicación Flask:
+- Parámetros de consulta en la URL (query parameters)
+- Datos de formulario (form data)
+- Datos JSON en el cuerpo de la petición
+
+Estos métodos son fundamentales para construir APIs web interactivas que puedan recibir información del cliente.
 """
 
-from flask import Flask
+from flask import Flask, jsonify, request
 
 def create_app():
     """
@@ -18,12 +29,38 @@ def create_app():
     """
     app = Flask(__name__)
 
-    @app.route('/website', methods=['GET'])
-    def get_website():
+    @app.route('/search', methods=['GET'])
+    def search():
         """
-        Devuelve una página web con una estructura HTML mínima
+        Maneja parámetros de consulta (query parameters) en la URL
+        Ejemplo: /search?q=flask&category=tutorial
+
+        Acceso mediante request.args (diccionario con los parámetros de la URL)
         """
-        # Implementa este endpoint para devolver el contenido solicitado
+        # Implementa este endpoint para obtener los parámetros de consulta
+        # y devolverlos en formato JSON
+        pass
+
+    @app.route('/form', methods=['POST'])
+    def form_handler():
+        """
+        Maneja datos de formulario enviados mediante POST
+
+        Acceso mediante request.form (para datos de formulario)
+        """
+        # Implementa este endpoint para obtener los datos del formulario
+        # y devolverlos en formato JSON
+        pass
+
+    @app.route('/json', methods=['POST'])
+    def json_handler():
+        """
+        Maneja datos JSON enviados en el cuerpo de la petición
+
+        Acceso mediante request.get_json() (para datos JSON)
+        """
+        # Implementa este endpoint para obtener los datos JSON
+        # y devolverlos en formato JSON
         pass
 
     return app

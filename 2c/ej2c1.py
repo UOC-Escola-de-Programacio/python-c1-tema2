@@ -2,6 +2,16 @@
 Enunciado:
 Desarrolla una API REST básica utilizando Flask con un endpoint que devuelve información sobre productos.
 
+En las actividades anteriores, implementaste una API utilizando la biblioteca http.server de Python,
+lo que requería escribir código para manejar rutas, analizar parámetros, establecer cabeceras HTTP y
+serializar las respuestas manualmente. Ahora veremos cómo Flask simplifica enormemente este proceso.
+
+Flask ofrece varias ventajas:
+- Gestión automática de rutas y parámetros URL
+- Conversión automática entre Python y JSON mediante jsonify()
+- Manejo simplificado de códigos de estado HTTP
+- No necesitas preocuparte por configurar manualmente cabeceras Content-Type
+
 Tu tarea es implementar el siguiente endpoint:
 
 `GET /product/<id>`: Devuelve información sobre un producto específico por su ID.

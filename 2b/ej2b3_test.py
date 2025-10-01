@@ -9,15 +9,64 @@ def client() -> FlaskClient:
     with app.test_client() as client:
         yield client
 
-def test_website_endpoint(client):
+def test_search_with_parameters(client):
     """
-    Prueba el endpoint /website para validar que devuelve una página web con estructura HTML mínima.
+    Prueba el endpoint /search con parámetros de consulta en la URL
     """
-    response = client.get("/website")
+    # Prueba con múltiples parámetros de consulta
+    response = client.get("/search?q=flask&category=tutorial")
     assert response.status_code == 200, "El código de estado debe ser 200."
-    html_content = response.data.decode("utf-8")
-    assert "<!doctype html>" in html_content.lower(), "La respuesta debe contener la declaración <!doctype html>."
-    assert "<html>" in html_content.lower(), "La respuesta debe contener la etiqueta <html>."
-    assert "<body>" in html_content.lower(), "La respuesta debe contener la etiqueta <body>."
-    assert "¡hola mundo!" in html_content.lower(), "La respuesta debe contener el mensaje '¡Hola mundo!' dentro del cuerpo."
+    data = response.json
+    assert data["q"] == "flask", "El parámetro 'q' debe estar en la respuesta."
+    assert data["category"] == "tutorial", "El parámetro 'category' debe estar en la respuesta."
 
+    # Prueba con un solo parámetro
+    response = client.get("/search?q=python")
+    assert response.status_code == 200, "El código de estado debe ser 200."
+    assert response.json["q"] == "python", "El parámetro 'q' debe estar en la respuesta."
+    assert response.json.get("category") is None, "El parámetro 'category' no debe existir o debe ser None."
+
+def test_form_handler(client):
+    """
+    Prueba el endpoint /form con datos de formulario
+    """
+    # Prueba con datos de formulario completos
+    form_data = {"name": "Juan Pérez", "email": "juan@example.com"}
+    response = client.post("/form", data=form_data)
+    assert response.status_code == 200, "El código de estado debe ser 200."
+    assert response.json["name"] == "Juan Pérez", "El nombre debe estar en la respuesta."
+    assert response.json["email"] == "juan@example.com", "El email debe estar en la respuesta."
+
+    # Prueba con datos parciales
+    response = client.post("/form", data={"name": "María"})
+    assert response.status_code == 200, "El código de estado debe ser 200."
+    assert response.json["name"] == "María", "El nombre debe estar en la respuesta."
+    assert response.json.get("email") is None, "El email no debe existir o debe ser None."
+
+def test_json_handler(client):
+    """
+    Prueba el endpoint /json con datos JSON en el cuerpo
+    """
+    # Prueba con objeto JSON simple
+    json_data = {"message": "Hola", "priority": "high"}
+    response = client.post("/json", json=json_data)
+    assert response.status_code == 200, "El código de estado debe ser 200."
+    assert response.json["message"] == "Hola", "El mensaje debe estar en la respuesta."
+    assert response.json["priority"] == "high", "La prioridad debe estar en la respuesta."
+
+    # Prueba con objeto JSON complejo
+    json_data = {
+        "user": {
+            "name": "Ana",
+            "roles": ["admin", "editor"]
+        },
+        "settings": {
+            "theme": "dark",
+            "notifications": True
+        }
+    }
+    response = client.post("/json", json=json_data)
+    assert response.status_code == 200, "El código de estado debe ser 200."
+    assert response.json["user"]["name"] == "Ana", "El nombre del usuario debe estar en la respuesta."
+    assert "admin" in response.json["user"]["roles"], "El rol 'admin' debe estar en la respuesta."
+    assert response.json["settings"]["theme"] == "dark", "El tema debe estar en la respuesta."
