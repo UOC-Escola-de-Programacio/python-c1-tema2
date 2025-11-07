@@ -117,11 +117,9 @@ def create_app():
         Devuelve la información de un animal específico por su ID
         Si el animal no existe, debe activar un error 404
         """
-        animal = next((a for a in animals if a['id'] == animal_id), None)
-        if animal is None:
-            # Si el animal no existe, usa abort(404) para lanzar un error 404
-            abort(404)
-        return jsonify(animal)
+        # Implementa este endpoint para devolver un animal por su ID
+        # si no existe, usa abort(404) para lanzar un error 404
+        pass
 
     @app.route('/animals', methods=['POST'])
     def add_animal():
@@ -156,7 +154,7 @@ def create_app():
         Endpoint de prueba que lanza un error 500 intencionalmente
         """
         # Lanza una excepción para probar el manejador de error 500
-        raise Exception("¡Este es un error de prueba!")
+        pass
 
     return app
 
