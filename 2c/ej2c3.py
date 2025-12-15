@@ -40,8 +40,8 @@ products = [
     {"id": 4, "name": "Office Desk", "price": 249.99, "category": "furniture"},
     {"id": 5, "name": "Ergonomic Chair", "price": 189.99, "category": "furniture"},
     {"id": 6, "name": "Coffee Maker Pro", "price": 89.99, "category": "appliances"},
-    {"id": 7, "name": "Wireless Headphones", "price": 129.99, "category": "electronics"},
-    {"id": 8, "name": "Smart Watch", "price": 199.99, "category": "electronics"}
+    {"id": 7, "name": "Smart Watch", "price": 199.99, "category": "electronics"},
+    {"id": 8, "name": "USB Cable", "price": 19.99, "category": "accessories"}
 ]
 
 def create_app():
@@ -60,11 +60,46 @@ def create_app():
         - max_price: Precio máximo
         - name: Buscar por nombre (coincidencia parcial)
         """
+        # Implementa este endpoint
         # Implementa aquí el filtrado de productos según los parámetros de consulta
         # 1. Obtén los parámetros de consulta usando request.args
         # 2. Filtra la lista de productos según los parámetros proporcionados
         # 3. Devuelve la lista filtrada en formato JSON con código 200
-        pass
+        category = request.args.get("category")
+        min_price = request.args.get("min_price", type=float)
+        max_price = request.args.get("max_price", type=float)
+        name = request.args.get("name")
+        filtered = products
+
+        new_list = []
+        if category:
+            for product in filtered:
+                if product["category"] == category:
+                    new_list.append(product)
+            filtered = new_list
+
+        new_list = []
+        if min_price is not None:
+            for product in filtered:
+                if min_price <= product["price"]:
+                    new_list.append(product)
+            filtered = new_list
+
+        new_list = []
+        if max_price is not None:
+            for product in filtered:
+                if product["price"] <= max_price:
+                    new_list.append(product)
+            filtered = new_list
+
+        new_list = []
+        if name:
+            for product in filtered:
+                if name in product["name"]:
+                    new_list.append(product)
+            filtered = new_list
+
+        return jsonify(filtered), 200
 
     return app
 

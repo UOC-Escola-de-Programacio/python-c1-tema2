@@ -29,7 +29,7 @@ def create_app():
     """
     app = Flask(__name__)
 
-    @app.route('/resource/<int:resource_id>', methods=['GET'])
+    @app.route('/resource/<resource_id>', methods=['GET'])
     def get_resource(resource_id):
         """
         Devuelve información sobre un recurso según su ID.
@@ -38,7 +38,15 @@ def create_app():
         - Si el ID es > 100: abort con código 404 (Not Found)
         """
         # Implementa este endpoint utilizando abort() según las condiciones
-        pass
+        try:
+            if int(resource_id) <= 0:
+                abort(400)
+            elif int(resource_id) > 100:
+                abort(404)
+            return f"El id es {resource_id}", 200
+        except ValueError:
+            abort(400)
+
 
     @app.route('/admin', methods=['GET'])
     def admin():
@@ -49,7 +57,15 @@ def create_app():
         - Si la clave no es 'secret123': abort con código 403 (Forbidden)
         """
         # Implementa este endpoint utilizando abort() según las condiciones
-        pass
+        key = request.args.get("key")
+
+        if key is None:
+            abort(401)
+
+        if key != "secret123":
+            abort(403)
+
+        return f"La clave es correcta!", 200
 
     return app
 

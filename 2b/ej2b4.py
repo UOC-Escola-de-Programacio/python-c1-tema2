@@ -16,7 +16,10 @@ from flask import Flask, render_template_string
 # Implementa la plantilla HTML aquí
 TEMPLATE = """
 <!doctype html>
-...
+<html>
+<body>
+¡Hola, {{nombre}}!
+</body>
 </html>
 """
 
@@ -32,8 +35,8 @@ def create_app():
         Devuelve una página web que saluda al usuario utilizando una plantilla Jinja2
         """
         # Utiliza render_template_string para renderizar la plantilla con el nombre proporcionado:
-
-        pass
+        print(render_template_string(TEMPLATE, nombre=nombre))
+        return render_template_string(TEMPLATE, nombre=nombre)
 
     return app
 
