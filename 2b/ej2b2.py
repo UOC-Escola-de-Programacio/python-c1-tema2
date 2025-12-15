@@ -22,6 +22,18 @@ def create_app():
 
     # Aquí debes implementar los endpoints solicitados
 
+    @app.route('/hello')
+    def hello():
+        return '¡Hola mundo!'
+
+    @app.route('/goodbye')
+    def goodbye():
+        return '¡Adiós mundo!'
+
+    @app.route('/greet/<name>')
+    def greet(name):
+        return f"¡Hola, {name}!"
+
     return app
 
 if __name__ == '__main__':

@@ -23,6 +23,10 @@ def create_app():
 
     # Aquí debes implementar el endpoint solicitado
 
+    @app.route('/')
+    def hello():
+        return '¡Hola mundo!'
+    
     return app
 
 if __name__ == '__main__':
