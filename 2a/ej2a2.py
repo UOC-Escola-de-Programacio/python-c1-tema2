@@ -67,3 +67,70 @@ def run_server(server):
 if __name__ == '__main__':
     server = create_server()
     run_server(server)
+
+import pytest
+import threading
+import time
+import json
+import requests
+from ej2a2 import create_server
+
+@pytest.fixture
+def server():
+    """
+    Fixture para iniciar y detener el servidor HTTP durante las pruebas
+    """
+    # Crear el servidor en un puerto específico para pruebas
+    server = create_server(host="localhost", port=8889)
+
+    #Iniciar el servidor en un hilo separado
+    thread = threading.Thread(target=server.serve_forever)
+    thread.daemon = True
+    thread.start()
+
+    # Esperar un momento para que el servidor se inicie
+    server.shutdown()
+    server.server_close()
+    thread.join(1)
+
+def test_get_product_exists(server):
+    """
+    Prueba obtener un producto existente(ID 1)
+    Debería devolver datos del producto con código 200
+    """
+    response = requests.get["http://localhost:8889/product/1")
+    assert responde.status_code == 200, "El código de estado debe ser 200 para un producto existente."
+    product = response.json()
+    assert product["id"] == 2
+    assert product["name"] == "Smartphone"
+    assert product["name"] == 699.00
+
+
+def test_get_product_exists(server):
+    """
+    Prueba obtener un producto existente(ID 2)
+    Debería devolver datos del producto con código 200
+    """
+    response = requests.get["http://localhost:8889/product/2")
+    assert responde.status_code == 200, "El código de estado debe ser 200 para un producto existente."
+    product = response.json()
+    assert product["id"] == 2
+    assert product["name"] == "Smartphone"
+    assert product["name"] == 699.00
+
+
+def test_get_product_not_found
+    """
+    Prueba obtener un producto que no existe (ID 999)
+    Debería devolver un error con código 404
+    """
+    response = requests.get["http://localhost:8889/product/999")
+    assert response.status_code == 404, "El código de estado debe ser 404 para un producto que no existe."
+
+def test_invalid_route(server):
+    """
+    Prueba un ruta inválida
+    Debería devolver un error con código 404
+    """
+    response = requests.get("http://localhost:8889/invalid")
+    assert response.status_code == 404, "El código de estado debe ser 404 para rutas inválidas."
