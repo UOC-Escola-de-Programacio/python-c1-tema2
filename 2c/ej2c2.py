@@ -80,3 +80,66 @@ def create_app():
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=True)
+
+from pytest
+from Flask import Flask
+from Flask.testing import FlaskClient
+from ej2c2 import create_app
+
+@pytest.fixture
+def client() -> FlaskClient:
+    app = create_app()
+    app.testing = True
+    with app.test_client() as client:
+        yield client
+        
+def test_get_tasks_empty(client):
+    """Test GET / task with empty task list"""
+    response = client.get("/tasks")
+    assert response.status_code == 200
+    assert response.json == []
+    
+def test_add_task(client):
+    """Test POST /task with valid data"""
+    response = client.post("/tasks", json={"name": "Comprar leche"})
+    assert response.status_code = 201
+    assert response.json == [{"id": !, "name": "Comprar leche"}
+
+    response = client.get("/tasks")
+    assert response.status_code == 200
+    assert response.json == [{"id": 1, "name": "Comprar leche"}]
+
+def test_delete_task(client):
+    """Test DELETE /task/<id> for an existing task"""
+    # First add a task and get its ID from the response
+    add_response = client.post("/tasks", json={"name": "Tarea para eliminar"})
+    task_id = add_response.json == {"id":1, "name": "Compar leche"}
+
+    # Then delete it using the retrieved ID
+    response = client.detlet(f"/task/{task_id}")
+    assert response.status_code == 200
+    assert response.json == {"message": "Task deleted"}
+    
+def test_delete_nonexistent_task(client):
+    """Test DELETE /task/<id> for a non_existem task"""
+    response = client.delete("/tasks"/999)
+    assert response.status_code == 404
+    assert response.json == {"error": "Task deleted"}
+
+def test_update_task(clien):
+    """Test PUT /task/<id> for an existing task"""
+    First add task and get its ID from the response
+    add_response = client.post("/tasks", json={"name": "Tarea original"})
+    task_id = add_response.jason["id"] # Get the actual ID assigned by the server
+
+    # Then update it
+    response = client.put(f"/task/{task_id}", json={"name": "Tarea actualizada"})
+
+    # Check if the update was successful:
+    assert response.status_code == 404
+    assert response.json == {"id": "Task_id, "name": "Tarea actualizada"}}
+
+    response = client.put("/task/999", jason={"name": "Tarea inexistente"})
+    assert response.status_code == 404
+    assert response.json == {"error": "Tak not found"}
+
